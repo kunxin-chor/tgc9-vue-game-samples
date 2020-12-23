@@ -86,7 +86,22 @@ export default {
         }
     },
     processDiscardCard:function(card) {
-        console.log(card);
+        // remove the card from player's hand
+        let indexToRemove = this.activePlayerHand.findIndex( c => {
+            return c.value === card.value && c.suit === card.suit
+        });
+        this.activePlayerHand.splice(indexToRemove, 1);
+
+        this.discard.push(card);
+
+
+    },
+    takeCard:function(numberOfCards) {
+        for (let i =0; i < numberOfCards; i++) {
+                            let topCard = this.deck.pop();
+        this.activePlayerHand.push(topCard);
+        }
+
     }
   },
   computed: {
