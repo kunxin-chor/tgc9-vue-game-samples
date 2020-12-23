@@ -1,25 +1,35 @@
 <template>
   <div>
     <h1>UNO</h1>
-    <h2>{{players[activePlayer].player}}</h2>
+    <h2>{{ players[activePlayer].player }}</h2>
+    <div id="discard-pile-container">
+        <DiscardPile v-bind:cards="discard"/>
+    </div>
     <div id="hand">
-        <div class="card" v-for="(card,index) in activePlayerHand" :key='index' :style="{backgroundColor: card.suit}">
-            {{card.value}} 
-        </div>
+        <Card v-for="(c,index) in activePlayerHand" :key="index"
+            v-bind:card="c"
+        />
+
     </div>
   </div>
 </template>
 
 <script>
 import Stack from "../data-structures/Stack";
+import Card from "./Card";
+import DiscardPile from "./DiscardPile"
 export default {
+  components: {
+    Card, DiscardPile
+  },
   data: function () {
     return {
       deck: new Stack(),
-      numberOfPlayers:2,
+      numberOfPlayers: 2,
       players: [],
       round: 0,
-      activePlayer: 0
+      activePlayer: 0,
+      discard: new Stack()
     };
   },
   methods: {
@@ -60,43 +70,46 @@ export default {
       }
     },
   },
-  computed:  {
-      activePlayerHand:function() {
-          return this.players[this.activePlayer].hand
-      }
+  computed: {
+    activePlayerHand: function () {
+      return this.players[this.activePlayer].hand;
+    },
   },
   mounted: function () {
-      this.initDeck();
+    this.initDeck();
 
-      for (let i =0; i < this.numberOfPlayers; i++) {
-          let hand = [];
-          for (let i=0; i < 7; i++) {
-            hand.push(this.deck.pop());
-
-          }
-          this.$set(this.players, i, {
-              'player': `Player ${i+1}`,
-              'hand':hand
-          })
+    for (let i = 0; i < this.numberOfPlayers; i++) {
+      let hand = [];
+      for (let i = 0; i < 7; i++) {
+        hand.push(this.deck.pop());
       }
+      this.$set(this.players, i, {
+        player: `Player ${i + 1}`,
+        hand: hand,
+      });
+    }
   },
 };
 </script>
 
 <style scoped>
-    .card {
-        border: 1px black solid;
-        height: 110px;
-        width: 60px;
-        border-radius: 10px;
-        text-align:center;
-        font-size: 24px;
- 
-    }
+.card {
+  border: 1px black solid;
+  height: 110px;
+  width: 60px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 24px;
+}
 
-    #hand {
-        display: flex;
-        justify-content: space-evenly;
-    }
+#hand {
+  display: flex;
+  justify-content: space-evenly;
+}
 
+#discard-pile-container {
+    display:flex;
+    justify-content: center;
+    margin:25px;
+}
 </style>
