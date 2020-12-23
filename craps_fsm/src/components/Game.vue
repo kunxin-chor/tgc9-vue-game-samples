@@ -1,11 +1,9 @@
 <template>
   <div>
-      <div class="alert" v-if="message">
-          {{message}}
-      </div>
-    <div>
-        Streak: {{streak}}
+    <div class="alert" v-if="message">
+      {{ message }}
     </div>
+    <div>Streak: {{ streak }}</div>
     <div v-if="gameState == 'play_game'">
       <div id="rolls">
         <div class="dice" v-for="(d, index) in dice" :key="index">
@@ -14,8 +12,8 @@
       </div>
       <div id="dice-total">{{ total }}</div>
       <div>
-        <label>Place bet:  $({{money}}) left</label><br/>
-        <input type="text" v-model="bet" placeholder="Place your bet"/>
+        <label>Place bet: $({{ money }}) left</label><br />
+        <input type="text" v-model="bet" placeholder="Place your bet" />
         <button @click="roll">Roll</button>
         <button>Withdraw</button>
       </div>
@@ -29,7 +27,7 @@
 
 <script>
 export default {
-  data: function () {
+  data: function() {
     return {
       dice: [],
       money: 100,
@@ -37,23 +35,24 @@ export default {
       gameState: "game_start",
       bet: 0,
       message: "",
-      streak: 1
+      streak: 1,
+      hack: false
     };
   },
-  created: function () {
+  created: function() {
     // React -- constructor
     // happens before the first render
     // loading from axios
     // initalizing data to default values
     this.setupGame();
   },
-  mounted: function () {
+  mounted: function() {
     // React -- componentDidMount
     // happens after the first render
     // etc.timer
   },
   methods: {
-    setupGame: function () {
+    setupGame: function() {
       //  instead of : this.dice[0] = 1;
       this.$set(this.dice, 0, 1);
 
@@ -62,49 +61,61 @@ export default {
 
       // automatically go to the play game state
       this.gameState = "play_game";
+
+      this.money = 100;
+      this.streak = 1;
     },
-    rollDice: function () {
+    rollDice: function() {
       let r = Math.floor(Math.random() * 6) + 1;
       return r;
     },
-    roll: function () {
+    roll: function() {
       if (this.bet < 10 || this.bet > this.money) {
-          this.message = "Minimal bet is 10 or you exceeded your wallet";
-          return;
+        this.message = "Minimal bet is 10 or you exceeded your wallet";
+        return;
       }
       // this.dice[0] = Math.floor(Math.random() * 6) + 1;
       this.message = "";
       this.$set(this.dice, 0, this.rollDice());
       this.$set(this.dice, 1, this.rollDice());
+      if (this.hack) {
+        this.$set(this.dice, 0, 6);
+        this.$set(this.dice, 1, 1);
+      }
       if (this.total == 7 || this.total == 11) {
-          let loss = parseInt((this.bet * (1 + this.streak / 5)));
+        let loss = parseInt(this.bet * (1 + this.streak / 5));
         this.money = this.money - loss;
         this.message = `You lost ${loss} amount of money`;
         this.streak = 1;
         if (this.money <= 0) {
-            this.gameState = "game_over";
+          this.gameState = "game_over";
         } else {
-            this.gameState = "play_game";
+          this.gameState = "play_game";
         }
- 
       } else {
         this.gameState = "play_game";
         this.money += parseInt(this.bet * (1 + this.streak / 10));
         this.streak += 1;
       }
     },
-    restartGame: function () {
+    restartGame: function() {
       this.gameState = "play_game";
-      this.message = "";
-      this.streak = 1;
-      this.setupGame();
-    },
+    }
   },
   computed: {
-    total: function () {
+    total: function() {
       return this.dice[0] + this.dice[1];
-    },
+    }
   },
+  watch: {
+    gameState: function() {
+
+      if (this.gameState == "play_game") {
+                  console.log("detect state change to play_game")
+        this.setupGame();
+      }
+    }
+  }
 };
 </script>
 
@@ -123,14 +134,14 @@ export default {
 }
 
 #dice-total {
-    display: flex;
-    justify-content: center;
-    font-size: 46px;
+  display: flex;
+  justify-content: center;
+  font-size: 46px;
 }
 
 .alert {
-    background-color: red;
-    padding: 20px;
-    margin: 20px;
+  background-color: red;
+  padding: 20px;
+  margin: 20px;
 }
 </style>
