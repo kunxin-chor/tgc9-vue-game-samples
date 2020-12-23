@@ -75,8 +75,13 @@ export default {
       return this.players[this.activePlayer].hand;
     },
   },
-  mounted: function () {
+  created: function () {
     this.initDeck();
+
+    this.discard.push({
+        value: 1,
+        suit:'red'
+    })
 
     for (let i = 0; i < this.numberOfPlayers; i++) {
       let hand = [];
@@ -93,14 +98,7 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  border: 1px black solid;
-  height: 110px;
-  width: 60px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 24px;
-}
+
 
 #hand {
   display: flex;
