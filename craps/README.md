@@ -39,3 +39,22 @@ What events will cause changes to the state?
 
 * The user presses "Roll" button, we will roll the dice and check if it is 7
 * The user can choose to "Withdraw", and the game will end
+
+## WHAT ARE THE FINITE STATES
+
+1. Game start state:
+   - user has 100 cash
+   - dice is set to 1, 1 respectively
+   - automatically go to the game play state
+ 
+
+2. Play game state
+     - user choose to roll dice or Withdraw
+   - if user choose to roll dice:
+      - determine if the player wins, if player wins, go back to the play game state
+      - if player looses, go to the game over state
+   - if user chooe to Withdraw: end game state
+
+3. Game over state
+
+4. End game state
