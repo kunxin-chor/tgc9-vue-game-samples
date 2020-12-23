@@ -8,6 +8,8 @@
     <div id="hand">
         <Card v-for="(c,index) in activePlayerHand" :key="index"
             v-bind:card="c"
+            v-bind:canDiscard="checkCanDiscard(c)"
+            @discardCardEvent="processDiscardCard"
         />
 
     </div>
@@ -69,6 +71,23 @@ export default {
         this.deck.push(card);
       }
     },
+    checkCanDiscard: function(card) {
+        // a card will be a key-value pair of suit and color
+        // example:
+        // {
+        //  value: 3,
+        //  suit: 'red'    
+        // }
+        let topCard = this.discard.peek();
+        if (card.suit == topCard.suit || card.value == topCard.value ) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    processDiscardCard:function(card) {
+        console.log(card);
+    }
   },
   computed: {
     activePlayerHand: function () {

@@ -1,5 +1,8 @@
 <template>
-      <div class="card" :style="{backgroundColor: card.suit}">
+      <div class="card" :style="{backgroundColor: card.suit,
+                                cursor: canDiscard ? 'pointer' : 'default' }"
+                        @click='discard'
+                                >
             {{card.value}} 
         </div>
 </template>
@@ -7,7 +10,17 @@
 <script>
 export default {
     name:'Card',
-    props:['card']
+    props:['card', 'canDiscard'],
+    methods:{
+        discard:function(){
+            if (this.canDiscard) {
+                  this.$emit('discardCardEvent', this.card);
+            } else {
+                alert("This card doesn't match the top card of the pile");
+            }
+          
+        }
+    }
 }
 </script>
 
